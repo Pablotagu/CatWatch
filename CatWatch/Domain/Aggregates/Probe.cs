@@ -1,3 +1,8 @@
+using CatWatch.Domain.Common;
+using CatWatch.Domain.Entities;
+
+namespace CatWatch.Domain.Aggregates;
+
 public class Probe : Entity, IAggregateRoot
 {
     public Guid ShelterId { get; private set; }

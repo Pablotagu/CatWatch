@@ -1,12 +1,30 @@
 using CatWatch.Domain.Aggregates;
+using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
+using MongoDB.Driver;
 
 namespace CatWatch.Infrastructure.Persistence;
 
 public class ProbeRepository : IProbeRepository
 {
-    public Task<Probe> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+
+    private readonly IMongoCollection<Probe> _collection;
+
+    public ProbeRepository(IMongoClient client, IConfiguration config)
     {
-        throw new NotImplementedException();
+        var db = client.GetDatabase(config["MongoDB:DatabaseName"]);
+        _collection = db.GetCollection<Probe>("probes");
+    }
+
+    public async Task<Probe?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _collection.Find(r => r.Id == id).FirstOrDefaultAsync(cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to get probe {id}", ex);
+        }
     }
 }

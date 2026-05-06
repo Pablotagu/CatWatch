@@ -1,6 +1,14 @@
 @CatWatch_HostAddress = http://localhost:5114
+@ProbeId = 00000000-0000-0000-0000-000000000001
+@ApiKey = devKey
 
-GET {{CatWatch_HostAddress}}/api/cats
-Accept: application/json
+### Add Reading
+POST {{CatWatch_HostAddress}}/api/probes/{{ProbeId}}/readings
+Content-Type: application/json
+X-Api-Key: {{ApiKey}}
+
+{
+  "temperature": 22.5
+}
 
 ###

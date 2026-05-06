@@ -4,6 +4,5 @@ namespace CatWatch.Domain.Repositories;
 
 public interface IProbeRepository
 {
-    Task<Probe> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-
+    Task<Probe?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);  
 }

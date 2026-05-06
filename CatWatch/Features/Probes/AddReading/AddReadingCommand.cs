@@ -1,3 +1,3 @@
 namespace CatWatch.Features.Probes.AddReading;
 
-public record AddReadingCommand(Guid ProbeId, decimal Temperature);
+public record AddReadingCommand(Guid ProbeId, double Temperature);

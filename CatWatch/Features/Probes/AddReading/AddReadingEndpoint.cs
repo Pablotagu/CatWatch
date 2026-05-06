@@ -20,4 +20,4 @@ public class AddReadingEndpoint : ControllerBase
     }
 }
 
-public record AddReadingRequest(decimal Temperature);
+public record AddReadingRequest(double Temperature);

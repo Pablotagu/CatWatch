@@ -2,9 +2,9 @@ namespace CatWatch.Domain.ValueObjects;
 
 public record Temperature
 {
-    public decimal Value { get; init; }
+    public double Value { get; init; }
 
-    public Temperature(decimal value)
+    public Temperature(double value)
     {
         Value = value;
     }

@@ -1,4 +1,5 @@
 using CatWatch.Domain.Aggregates;
+using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
 using MongoDB.Driver;
 
@@ -17,17 +18,33 @@ public class ReadingRepository : IReadingRepository
 
     public async Task AddAsync(Reading reading, CancellationToken cancellationToken = default)
     {
-        await _collection.InsertOneAsync(reading, cancellationToken: cancellationToken);
+        try
+        {
+            await _collection.InsertOneAsync(reading, cancellationToken: cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to add reading", ex);
+        }
     }
 
     public async Task<IEnumerable<Reading>> GetByProbeIdAsync(Guid probeId, CancellationToken cancellationToken = default)
     {
-        return await _collection.Find(r => r.ProbeId == probeId).ToListAsync(cancellationToken);
+        try
+        {
+            return await _collection.Find(r => r.ProbeId == probeId).ToListAsync(cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to get readings for probe {probeId}", ex);
+        }
     }
 
     public async Task<IEnumerable<Reading>> GetLatestReadings(CancellationToken cancellationToken = default)
     {
-        var pipeline = new EmptyPipelineDefinition<Reading>()
+        try
+        {
+            var pipeline = new EmptyPipelineDefinition<Reading>()
             .Sort(Builders<Reading>.Sort.Descending(r => r.Timestamp))
             .Group(
                 r => r.ProbeId,
@@ -38,5 +55,10 @@ public class ReadingRepository : IReadingRepository
                     Temperature = g.First().Temperature
                 });
         return await _collection.Aggregate(pipeline).ToListAsync(cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to get latest readings", ex);
+        }
     }
 }

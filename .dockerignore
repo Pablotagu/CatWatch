@@ -5,3 +5,4 @@ obj/
 .claude/
 *.user
 CatWatch.Tests/
+.env

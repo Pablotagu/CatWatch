@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatWatch.Features.Probes.AddReading;
@@ -11,7 +12,7 @@ public class AddReadingEndpoint : ControllerBase
     {
         _handler = handler;
     }
-
+    [Authorize(Policy = "ApiKeyPolicy")]
     [HttpPost("api/probes/{probeId:guid}/readings")]
     public async Task<IActionResult> Handle(Guid probeId, [FromBody] AddReadingRequest request, CancellationToken cancellationToken)
     {

@@ -1,3 +1,5 @@
+using CatWatch.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authorization;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,8 +9,17 @@ builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ApiKeyPolicy", policy =>
+        policy.AddRequirements(new ApiKeyRequirement()));
+});
+
 builder.Services.AddSingleton<IMongoClient>(_ =>
     new MongoClient(builder.Configuration.GetConnectionString("MongoDb")));
+
+builder.Services.AddSingleton<IAuthorizationHandler, ApiKeyHandler>();
+
 
 var app = builder.Build();
 

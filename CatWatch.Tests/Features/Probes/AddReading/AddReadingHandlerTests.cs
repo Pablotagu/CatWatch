@@ -1,5 +1,4 @@
 using CatWatch.Domain.Aggregates;
-using CatWatch.Domain.Entities;
 using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
 using CatWatch.Features.Probes.AddReading;

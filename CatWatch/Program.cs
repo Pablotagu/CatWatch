@@ -1,10 +1,7 @@
-using CatWatch.Domain.Repositories;
-using CatWatch.Features.Probes.AddReading;
-using CatWatch.Features.Probes.GetProbe;
 using CatWatch.Infrastructure.Auth;
-using CatWatch.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
-using MongoDB.Driver;
+using CatWatch.Infrastructure;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,17 +15,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ApiKeyPolicy", policy =>
         policy.AddRequirements(new ApiKeyRequirement()));
 });
-
-builder.Services.AddSingleton<IMongoClient>(_ =>
-    new MongoClient(builder.Configuration.GetConnectionString("MongoDb")));
-
 builder.Services.AddSingleton<IAuthorizationHandler, ApiKeyHandler>();
 
-builder.Services.AddScoped<AddReadingHandler>();
-builder.Services.AddScoped<GetProbeHandler>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-builder.Services.AddScoped<IProbeRepository, ProbeRepository>();
-builder.Services.AddScoped<IReadingRepository, ReadingRepository>();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 var app = builder.Build();

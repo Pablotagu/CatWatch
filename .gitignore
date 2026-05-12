@@ -5,3 +5,12 @@ obj/
 .vscode/
 .claude/
 .env
+CatWatch.FW/.pio
+CatWatch.FW/.vscode/.browse.c_cpp.db*
+CatWatch.FW/.vscode/c_cpp_properties.json
+CatWatch.FW/.vscode/launch.json
+CatWatch.FW/.vscode/ipch
+CatWatch.FW/lib/README
+CatWatch.FW/include/README
+CatWatch.FW/test/README
+CatWatch.FW/src/secrets.h

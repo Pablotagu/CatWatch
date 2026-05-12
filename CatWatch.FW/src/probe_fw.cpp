@@ -15,11 +15,6 @@ void setup() {
 
   Serial.begin(BAUDS); 
   sensors.begin();
-  connectToWiFi();
-  if(DEBUG)
-  {
-    Serial.println("Searching sensors...");
-  }
 }
 
 
@@ -37,5 +32,5 @@ void loop() {
   }
 
   sendReading(temperature);
-  delay(WAIT_TIME);
+  esp_deep_sleep(LOOP_WAIT_TIME);
 }

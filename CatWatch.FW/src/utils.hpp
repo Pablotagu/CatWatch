@@ -1,9 +1,12 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
+WiFiClient wifiClient;
+HTTPClient httpClient;
 
 void sendReading(float temperature)
 {
+  connectWifi();
   if (WiFi.status() != WL_CONNECTED) 
   {
     if(DEBUG)
@@ -13,38 +16,55 @@ void sendReading(float temperature)
     return;
   }
 
-  HTTPClient http;
-  http.begin(API_URL);
-  
-  http.addHeader("Content-Type", "application/json");
-  http.addHeader("x-api-key", PROBE_API_KEY);
-  
-  String payload = "{\"probeId\":\"" + String(PROBE_ID) + "\",\"temperature\":" + String(temperature) + "}";
-  int httpResponseCode = http.POST(payload);
+  openConnection();  
+  postReading(temperature);
+  closeConnection();
+  disconnectWifi();  
+} 
+
+
+void postReading(float temperature) 
+{
+  int httpResponseCode = httpClient.POST(getReadingAsPayload(temperature));
   if (DEBUG) {
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
   }
-  http.end();
-  
-} 
-void connectToWiFi(){
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+}
 
-  if(DEBUG)
+String getReadingAsPayload(float temperature)
+{
+  return "{\"probeId\":\"" + String(PROBE_ID) + "\",\"temperature\":" + String(temperature) + "}";
+}
+
+
+void openConnection()
+{
+  httpClient.begin(wifiClient, API_URL); 
+  httpClient.addHeader("Content-Type", "application/json");
+  httpClient.addHeader("x-api-key", PROBE_API_KEY);
+}
+
+
+void closeConnection() 
+{
+  httpClient.end();
+}
+
+
+void connectWifi()
+{
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < WIFI_CONNECTION_MAX_ATTEMPTS) 
   {
-    Serial.print("Connecting to WiFi...");
+    delay(WIFI_CONNECTION_RETRY_DELAY);
+    attempts++;
   }
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    if(DEBUG)
-    {
-      Serial.print(".");
-    }
-  }
-  if(DEBUG)
-  {
-    Serial.println("Connected!");
-  }
-  
+}
+
+
+void disconnectWifi()
+{
+  WiFi.disconnect(true);
 }

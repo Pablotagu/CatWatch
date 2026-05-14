@@ -1,18 +1,13 @@
+using Serilog;
+using Serilog.Sinks.Grafana.Loki;
+
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
+builder.Services.AddHostedService<LogMessageConsumer>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.GrafanaLoki("http://loki:3100")
+    .WriteTo.Console()
+    .CreateLogger();
 
 app.Run();

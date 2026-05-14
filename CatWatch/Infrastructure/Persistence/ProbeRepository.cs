@@ -10,11 +10,13 @@ public class ProbeRepository : IProbeRepository
 
     private readonly IMongoCollection<Probe> _collection;
 
+
     public ProbeRepository(IMongoClient client, IConfiguration config)
     {
         var db = client.GetDatabase(config["MongoDB:DatabaseName"]);
         _collection = db.GetCollection<Probe>("probes");
     }
+
 
     public async Task<Probe?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -27,4 +29,18 @@ public class ProbeRepository : IProbeRepository
             throw new RepositoryException($"Failed to get probe {id}", ex);
         }
     }
+
+
+    public Task AddAsync(Probe probe, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return _collection.InsertOneAsync(probe, cancellationToken: cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to add probe {probe.Id}", ex);
+        }
+    }
+
 }

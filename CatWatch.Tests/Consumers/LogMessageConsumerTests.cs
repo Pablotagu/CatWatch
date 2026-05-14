@@ -1,5 +1,6 @@
 using CatWatch.Contracts.Messages;
 using CatWatch.Log.Consumers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -12,7 +13,9 @@ public class LogMessageConsumerTests
     {
         var logger = Substitute.For<ILogger<LogMessageConsumer>>();
         var message = new LogMessage(LogPriority.Info, "Test message", DateTime.UtcNow, ServiceNames.CatWatch);
-        var consumer = new LogMessageConsumer(logger);
+        var config = Substitute.For<IConfiguration>();
+        config["RabbitMQ:HostName"].Returns("localhost");
+        var consumer = new LogMessageConsumer(logger, config);
 
         await consumer.ProcessMessageAsync(message);
 

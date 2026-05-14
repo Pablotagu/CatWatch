@@ -11,8 +11,11 @@ public static class DependencyInjection
         services.AddSingleton<IMongoClient>(_ =>
             new MongoClient(configuration.GetConnectionString("MongoDb")));
 
+
         services.AddScoped<IProbeRepository, ProbeRepository>();
         services.AddScoped<IReadingRepository, ReadingRepository>();
+        services.AddScoped<IShelterRepository, ShelterRepository>();
+        
 
         return services;
     }

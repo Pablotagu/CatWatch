@@ -29,7 +29,8 @@ public class LogMessageConsumer : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var factory = new ConnectionFactory { HostName = _config["RabbitMQ:HostName"] };
+        var hostName = _config["RabbitMQ:HostName"] ?? throw new Exception("Missing RabbitMQ:HostName config");
+        var factory = new ConnectionFactory { HostName = hostName };
 
         using var connection = await factory.CreateConnectionAsync(stoppingToken);
         using var channel = await connection.CreateChannelAsync();

@@ -1,11 +1,7 @@
-using CatWatch.Domain.Aggregates;
-using CatWatch.Domain.Exceptions;
-using CatWatch.Domain.Repositories;
-using CatWatch.Features.Probes.AddReading;
+using CatWatch.Contracts.Messages;
 using CatWatch.Log.Consumers;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 
 namespace CatWatch.Tests.Consumers;
 

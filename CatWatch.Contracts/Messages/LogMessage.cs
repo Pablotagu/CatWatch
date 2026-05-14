@@ -1,4 +1,4 @@
-public enum LogLevel
+public enum LogPriority
 {
     Trace,
     Debug,
@@ -8,4 +8,10 @@ public enum LogLevel
     Critical
 }
 
-public record LogMessage(LogLevel Level, string Message, DateTime Timestamp, string? Source);
+public static class ServiceNames
+{
+    public const string CatWatch = "CatWatch";
+    public const string CatWatchLog = "CatWatch.Log";
+}
+
+public record LogMessage(LogPriority Level, string Message, DateTime Timestamp, string? Source);

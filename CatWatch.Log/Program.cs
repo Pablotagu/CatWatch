@@ -1,3 +1,4 @@
+using CatWatch.Log.Consumers;
 using Serilog;
 using Serilog.Sinks.Grafana.Loki;
 

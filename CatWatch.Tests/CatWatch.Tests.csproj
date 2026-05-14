@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CatWatch\CatWatch.csproj" />
+    <ProjectReference Include="..\CatWatch.Log\CatWatch.Log.csproj" />
   </ItemGroup>
 
 </Project>

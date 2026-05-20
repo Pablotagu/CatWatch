@@ -17,7 +17,7 @@ public class AddReadingHandler : IRequestHandler<AddReadingCommand>
         _probeRepository = probeRepository;
     }
 
-    public async Task Handle(AddReadingCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddReadingCommand request, CancellationToken cancellationToken = default)
     {
         var probe = await _probeRepository.GetByIdAsync(request.ProbeId, cancellationToken);
 

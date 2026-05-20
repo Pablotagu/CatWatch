@@ -18,7 +18,7 @@ public class CreateProbeHandler : IRequestHandler<CreateProbeCommand>
         _shelterRepository = shelterRepository;
     }
 
-    public async Task Handle(CreateProbeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(CreateProbeCommand request, CancellationToken cancellationToken = default)
     {
          var shelter = await _shelterRepository.GetByIdAsync(request.ShelterId, cancellationToken);
 

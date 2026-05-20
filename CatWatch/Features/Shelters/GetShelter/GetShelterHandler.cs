@@ -14,7 +14,7 @@ public class GetShelterHandler : IRequestHandler<GetShelterQuery, Shelter>
         _shelterRepository = shelterRepository;
     }
 
-    public async Task<Shelter> Handle(GetShelterQuery request, CancellationToken cancellationToken)
+    public async Task<Shelter> Handle(GetShelterQuery request, CancellationToken cancellationToken = default)
     {
         var shelter = await _shelterRepository.GetByIdAsync(request.Id, cancellationToken);
         if (shelter == null)

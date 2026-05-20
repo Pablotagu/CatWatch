@@ -14,7 +14,7 @@ public class GetProbeHandler : IRequestHandler<GetProbeQuery, Probe>
         _probeRepository = probeRepository;
     }
 
-    public async Task<Probe> Handle(GetProbeQuery request, CancellationToken cancellationToken)
+    public async Task<Probe> Handle(GetProbeQuery request, CancellationToken cancellationToken = default)
     {
         var probe = await _probeRepository.GetByIdAsync(request.Id, cancellationToken);
         if (probe == null)

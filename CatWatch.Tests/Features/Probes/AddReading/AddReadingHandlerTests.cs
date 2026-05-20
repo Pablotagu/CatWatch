@@ -21,7 +21,7 @@ public class AddReadingHandlerTests
         var handler = new AddReadingHandler(_readingRepository, _probeRepository);
         var command = new AddReadingCommand(probeId, 22.5);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.HandleAsync(command));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class AddReadingHandlerTests
         var handler = new AddReadingHandler(_readingRepository, _probeRepository);
         var command = new AddReadingCommand(probe.Id, 22.5);
 
-        await handler.HandleAsync(command);
+        await handler.Handle(command);
 
         await _readingRepository.Received(1).AddAsync(Arg.Is<Reading>(r =>
             r.ProbeId == probe.Id &&

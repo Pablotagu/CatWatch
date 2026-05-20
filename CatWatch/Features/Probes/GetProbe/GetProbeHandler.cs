@@ -1,10 +1,11 @@
 using CatWatch.Domain.Aggregates;
 using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
+using MediatR;
 
 namespace CatWatch.Features.Probes.GetProbe;
 
-public class GetProbeHandler
+public class GetProbeHandler : IRequestHandler<GetProbeQuery, Probe>
 {
     private readonly IProbeRepository _probeRepository;
 
@@ -13,13 +14,14 @@ public class GetProbeHandler
         _probeRepository = probeRepository;
     }
 
-    public async Task<Probe> HandleAsync(GetProbeQuery query, CancellationToken cancellationToken = default)
+    public async Task<Probe> Handle(GetProbeQuery request, CancellationToken cancellationToken)
     {
-        var probe = await _probeRepository.GetByIdAsync(query.Id, cancellationToken);
+        var probe = await _probeRepository.GetByIdAsync(request.Id, cancellationToken);
         if (probe == null)
         {
-            throw new NotFoundException($"Probe with ID {query.Id} not found");
+            throw new NotFoundException($"Probe with ID {request.Id} not found");
         }
         return probe;
     }
+
 }

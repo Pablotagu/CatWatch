@@ -1,33 +1,28 @@
-using System.ComponentModel.Design;
-using CatWatch.Domain.Aggregates;
-using CatWatch.Domain.Exceptions;
-using CatWatch.Domain.Repositories;
-using CatWatch.Domain.ValueObjects;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CatWatch.Features.Probes.CreateProbe;
 
-public class CreateProbeHandler
+[ApiController]
+public class CreateProbeEndpoint : ControllerBase
 {
-    private readonly IProbeRepository _probeRepository;
-    private readonly IShelterRepository _shelterRepository;
+    private readonly IMediator _mediator;
 
-
-    public CreateProbeHandler(IProbeRepository probeRepository, IShelterRepository shelterRepository)
+    public CreateProbeEndpoint(IMediator mediator)
     {
-        _probeRepository = probeRepository;
-        _shelterRepository = shelterRepository;
+        _mediator = mediator;
     }
 
 
-    public async Task HandleAsync(CreateProbeCommand command, CancellationToken cancellationToken = default)
+    [Authorize(Policy = "ApiKeyPolicy")]
+    [HttpPost("api/probes")]
+    public async Task<IActionResult> Handle([FromBody] CreateProbeRequest request, CancellationToken cancellationToken)
     {
-        var shelter = await _shelterRepository.GetByIdAsync(command.ShelterId, cancellationToken);
-
-        if (shelter is null)
-            throw new NotFoundException($"Shelter with id {command.ShelterId} not found");
-
-        var probe = new Probe(command.ShelterId, command.Name);
-
-        await _probeRepository.AddAsync(probe, cancellationToken);
+        await _mediator.Send(new CreateProbeCommand(request.Name, request.ShelterId), cancellationToken);
+        return Created();     
     }
 }
+
+
+public record CreateProbeRequest(string Name, Guid ShelterId);

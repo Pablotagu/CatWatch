@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,17 +7,17 @@ namespace CatWatch.Features.Probes.AddReading;
 [ApiController]
 public class AddReadingEndpoint : ControllerBase
 {
-    private readonly AddReadingHandler _handler;
+    private readonly IMediator _mediator;
 
-    public AddReadingEndpoint(AddReadingHandler handler)
+    public AddReadingEndpoint(IMediator mediator)
     {
-        _handler = handler;
+        _mediator = mediator;
     }
     [Authorize(Policy = "ApiKeyPolicy")]
     [HttpPost("api/probes/{probeId:guid}/readings")]
     public async Task<IActionResult> Handle(Guid probeId, [FromBody] AddReadingRequest request, CancellationToken cancellationToken)
     {
-        await _handler.HandleAsync(new AddReadingCommand(probeId, request.Temperature), cancellationToken);
+        await _mediator.Send(new AddReadingCommand(probeId, request.Temperature), cancellationToken);
         return Created();     
     }
 }

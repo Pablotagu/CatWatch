@@ -17,6 +17,20 @@ public class ShelterRepository : IShelterRepository
         _collection = db.GetCollection<Shelter>("shelters");
     }
 
+
+    public async Task AddAsync(Shelter shelter, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await _collection.InsertOneAsync(shelter, cancellationToken: cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to add shelter {shelter.Id}", ex);
+        }
+    }
+    
+
     public async Task<Shelter?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         try
@@ -26,6 +40,19 @@ public class ShelterRepository : IShelterRepository
         catch (MongoException ex)
         {
             throw new RepositoryException($"Failed to get shelter {id}", ex);
+        }
+    }
+
+
+    public async Task<IEnumerable<Shelter>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _collection.Find(_ => true).ToListAsync(cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to get shelters", ex);
         }
     }
 }

@@ -31,11 +31,11 @@ public class ProbeRepository : IProbeRepository
     }
 
 
-    public Task AddAsync(Probe probe, CancellationToken cancellationToken = default)
+    public async Task AddAsync(Probe probe, CancellationToken cancellationToken = default)
     {
         try
         {
-            return _collection.InsertOneAsync(probe, cancellationToken: cancellationToken);
+            await _collection.InsertOneAsync(probe, cancellationToken: cancellationToken);
         }
         catch (MongoException ex)
         {

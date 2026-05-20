@@ -1,12 +1,25 @@
 services:
   catwatch:
-    build: .
+    build:
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
     env_file:
       - .env
     depends_on:
       - mongo
+      - rabbitmq
+
+  catwatch-log:
+    build:
+      dockerfile: dockerfile.log
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_started
 
   mongo:
     image: mongo:8
@@ -20,6 +33,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mongo-data:

@@ -20,6 +20,13 @@ public class GlobalExceptionHandler : IExceptionHandler
             return true;
         }
 
+        if (exception is ConflictException)
+        {
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            await context.Response.WriteAsJsonAsync(new { error = exception.Message }, cancellationToken);
+            return true;
+        }
+
         if (exception is RepositoryException)
         {
             _logger.LogError(exception, "Repository error occurred");

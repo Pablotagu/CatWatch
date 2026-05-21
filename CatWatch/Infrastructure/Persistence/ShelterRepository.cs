@@ -55,4 +55,16 @@ public class ShelterRepository : IShelterRepository
             throw new RepositoryException($"Failed to get shelters", ex);
         }
     }
+
+    public async Task<Shelter?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _collection.Find(r => r.Name.ToLowerInvariant() == name.ToLowerInvariant()).FirstOrDefaultAsync(cancellationToken);
+        }
+        catch (MongoException ex)
+        {
+            throw new RepositoryException($"Failed to get shelter {name}", ex);
+        }
+    }
 }

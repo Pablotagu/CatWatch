@@ -11,4 +11,10 @@ public class Shelter : Entity, IAggregateRoot
     {
         Name = name;
     }
+
+    public Shelter(Guid id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }

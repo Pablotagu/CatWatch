@@ -1,6 +1,6 @@
 using CatWatch.Domain.Aggregates;
-using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
+using CatWatch.Infrastructure.Exceptions;
 using MongoDB.Driver;
 
 namespace CatWatch.Infrastructure.Persistence;

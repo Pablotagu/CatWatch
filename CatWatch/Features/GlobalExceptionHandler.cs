@@ -1,4 +1,5 @@
 using CatWatch.Domain.Exceptions;
+using CatWatch.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 
 public class GlobalExceptionHandler : IExceptionHandler

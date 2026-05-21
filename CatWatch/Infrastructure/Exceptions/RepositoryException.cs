@@ -1,4 +1,4 @@
-namespace CatWatch.Domain.Exceptions;
+namespace CatWatch.Infrastructure.Exceptions;
 
 public class RepositoryException : Exception
 {

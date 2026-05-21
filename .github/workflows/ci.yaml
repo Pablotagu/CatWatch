@@ -7,7 +7,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code

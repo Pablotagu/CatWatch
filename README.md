@@ -1,3 +1,5 @@
+[![ci](https://github.com/Pablotagu/CatWatch/actions/workflows/ci.yaml/badge.svg?branch=dev)](https://github.com/Pablotagu/CatWatch/actions/workflows/ci.yaml)
+
 # CatWatch
 
 REST API for monitoring temperatures inside cat shelters using ESP32 probes with temperature sensors. 

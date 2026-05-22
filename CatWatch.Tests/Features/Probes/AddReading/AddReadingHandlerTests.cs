@@ -1,7 +1,7 @@
 using CatWatch.Domain.Aggregates;
 using CatWatch.Domain.Exceptions;
 using CatWatch.Domain.Repositories;
-using CatWatch.Features.Probes.AddReading;
+using CatWatch.Features.Readings.AddReading;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 

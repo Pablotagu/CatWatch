@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CatWatch.Features.Probes.AddReading;
+namespace CatWatch.Features.Readings.AddReading;
 
 [ApiController]
 public class AddReadingEndpoint : ControllerBase

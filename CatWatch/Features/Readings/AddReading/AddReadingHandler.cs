@@ -4,7 +4,7 @@ using CatWatch.Domain.Repositories;
 using CatWatch.Domain.ValueObjects;
 using MediatR;
 
-namespace CatWatch.Features.Probes.AddReading;
+namespace CatWatch.Features.Readings.AddReading;
 
 public class AddReadingHandler : IRequestHandler<AddReadingCommand>
 {

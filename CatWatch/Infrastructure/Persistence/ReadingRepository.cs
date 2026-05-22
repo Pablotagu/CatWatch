@@ -41,7 +41,7 @@ public class ReadingRepository : IReadingRepository
         }
     }
 
-    public async Task<IEnumerable<Reading>> GetLatestReadings(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Reading>> GetLatestReadingsAsync(CancellationToken cancellationToken = default)
     {
         try
         {

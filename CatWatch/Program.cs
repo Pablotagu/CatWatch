@@ -21,6 +21,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddHealthChecks();
+
+
 
 var app = builder.Build();
 
@@ -29,6 +32,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapHealthChecks("/health");
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();

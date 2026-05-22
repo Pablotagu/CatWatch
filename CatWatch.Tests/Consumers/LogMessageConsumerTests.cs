@@ -12,7 +12,7 @@ public class LogMessageConsumerTests
     public async Task ProcessMessage_WhenValidMessage_LogsMessage()
     {
         var logger = Substitute.For<ILogger<LogMessageConsumer>>();
-        var message = new LogMessage(LogPriority.Info, "Test message", DateTime.UtcNow, ServiceNames.CatWatch);
+        var message = new LogMessage(LogLevel.Information, "Test message", DateTime.UtcNow, ServiceNames.CatWatch);
         var config = Substitute.For<IConfiguration>();
         config["RabbitMQ:HostName"].Returns("localhost");
         var consumer = new LogMessageConsumer(logger, config);

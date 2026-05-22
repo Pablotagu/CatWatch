@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
+
 namespace CatWatch.Contracts.Messages;
 
 
-public record LogMessage(LogPriority Level, string Message, DateTime Timestamp, string? Source);
+public record LogMessage(LogLevel Level, string Message, DateTime Timestamp, string? Source);

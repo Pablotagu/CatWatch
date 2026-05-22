@@ -1,4 +1,5 @@
 using CatWatch.Domain.Repositories;
+using CatWatch.Infrastructure.Messaging;
 using CatWatch.Infrastructure.Persistence;
 using MongoDB.Driver;
 
@@ -15,6 +16,10 @@ public static class DependencyInjection
         services.AddScoped<IProbeRepository, ProbeRepository>();
         services.AddScoped<IReadingRepository, ReadingRepository>();
         services.AddScoped<IShelterRepository, ShelterRepository>();
+
+        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+        services.AddSingleton<ILoggerProvider, RabbitMqLoggerProvider>();
+
         
 
         return services;

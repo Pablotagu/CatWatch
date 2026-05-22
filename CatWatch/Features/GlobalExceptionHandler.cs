@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Diagnostics;
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;
-
+    
     public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
     {
         _logger = logger;
@@ -16,6 +16,7 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         if (exception is NotFoundException)
         {
+            _logger.LogInformation(exception, "Resource not found");
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             await context.Response.WriteAsJsonAsync(new { error = exception.Message }, cancellationToken);
             return true;
@@ -23,6 +24,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         if (exception is ConflictException)
         {
+            _logger.LogInformation(exception, "Conflict error occurred");
             context.Response.StatusCode = StatusCodes.Status409Conflict;
             await context.Response.WriteAsJsonAsync(new { error = exception.Message }, cancellationToken);
             return true;
@@ -37,6 +39,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         }
 
         _logger.LogError(exception, "Unexpected error occurred");
-        return false; // deja pasar las excepciones no controladas
+
+        return false; 
     }
 }

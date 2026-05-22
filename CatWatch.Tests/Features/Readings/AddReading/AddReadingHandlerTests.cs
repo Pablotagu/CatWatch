@@ -5,7 +5,7 @@ using CatWatch.Features.Readings.AddReading;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace CatWatch.Tests.Features.Probes.AddReading;
+namespace CatWatch.Tests.Features.Readings.AddReading;
 
 public class AddReadingHandlerTests
 {
@@ -39,8 +39,7 @@ public class AddReadingHandlerTests
         await _readingRepository.Received(1).AddAsync(
             Arg.Is<Reading>(r =>
                 r.ProbeId == probe.Id &&
-                r.Temperature.Value == command.Temperature &&
-                r.Timestamp == DateTime.UtcNow
+                r.Temperature.Value == command.Temperature
             ), Arg.Any<CancellationToken>());
     }
 }

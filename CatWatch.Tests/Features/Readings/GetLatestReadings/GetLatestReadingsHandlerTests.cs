@@ -35,8 +35,8 @@ public class GetLatestReadingsTests
         var command = new GetLatestReadingsQuery();
         _readingRepository.GetLatestReadingsAsync(Arg.Any<CancellationToken>()).Returns(readings);
         
-        var result = await handler.Handle(command);
-        
+        var result = await handler.Handle(command, CancellationToken.None);
+
         Assert.Equal(readings, result);
     }
 }

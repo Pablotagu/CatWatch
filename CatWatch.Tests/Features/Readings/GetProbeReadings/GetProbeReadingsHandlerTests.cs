@@ -25,7 +25,7 @@ public class GetProbeReadingsHandlerTests
         var handler = new GetProbeReadingsHandler(_readingRepository, _probeRepository);
         var command = new GetProbeReadingsQuery(probeId);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, Arg.Any<CancellationToken>()));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
     }
 
 
@@ -63,7 +63,7 @@ public class GetProbeReadingsHandlerTests
         var handler = new GetProbeReadingsHandler(_readingRepository, _probeRepository);
         var command = new GetProbeReadingsQuery(probeId);
 
-        var result = await handler.Handle(command, Arg.Any<CancellationToken>());
+        var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.Equal(readings, result);
     }

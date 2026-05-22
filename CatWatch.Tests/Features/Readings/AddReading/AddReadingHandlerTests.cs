@@ -21,7 +21,7 @@ public class AddReadingHandlerTests
         var handler = new AddReadingHandler(_readingRepository, _probeRepository);
         var command = new AddReadingCommand(probeId, 22.5);
 
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -34,11 +34,13 @@ public class AddReadingHandlerTests
         var handler = new AddReadingHandler(_readingRepository, _probeRepository);
         var command = new AddReadingCommand(probe.Id, 22.5);
 
-        await handler.Handle(command);
+        await handler.Handle(command, CancellationToken.None);
 
-        await _readingRepository.Received(1).AddAsync(Arg.Is<Reading>(r =>
-            r.ProbeId == probe.Id &&
-            r.Temperature.Value == 22.5
-        ));
+        await _readingRepository.Received(1).AddAsync(
+            Arg.Is<Reading>(r =>
+                r.ProbeId == probe.Id &&
+                r.Temperature.Value == command.Temperature &&
+                r.Timestamp == DateTime.UtcNow
+            ), Arg.Any<CancellationToken>());
     }
 }

@@ -25,7 +25,7 @@ public class CreateShelterHandler : IRequestHandler<CreateShelterCommand>
             throw new ConflictException($"Shelter with name '{request.Name}' already exists");
         }
 
-        var newShelter = new Shelter(request.Name);
+        var newShelter = new Shelter(Guid.NewGuid(), request.Name);
         await _shelterRepository.AddAsync(newShelter, cancellationToken);
     }
 }

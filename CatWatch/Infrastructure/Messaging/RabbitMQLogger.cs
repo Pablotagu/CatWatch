@@ -28,7 +28,7 @@ public class RabbitMqLogger : ILogger
         {
             _ = _publisher.PublishAsync(new LogMessage(logLevel, formatter(state, exception), DateTime.UtcNow, ServiceNames.CatWatch));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // avoid unhandled exceptions
         }

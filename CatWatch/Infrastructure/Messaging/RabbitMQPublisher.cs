@@ -6,19 +6,51 @@ using RabbitMQ.Client;
 
 namespace CatWatch.Infrastructure.Messaging;
 
-public class RabbitMqPublisher : IMessagePublisher
+public class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
 {
     private readonly IConfiguration _config;
+    private IConnection? _connection;
+    private IChannel? _channel;
+
 
     public RabbitMqPublisher(IConfiguration config) => _config = config;
 
+
+    private async Task EnsureConnectionAsync(CancellationToken cancellationToken)
+    {
+        if (_channel != null) 
+            return;
+
+        var factory = new ConnectionFactory { HostName = _config["RabbitMQ:HostName"] };
+        _connection = await factory.CreateConnectionAsync(cancellationToken);
+        _channel = await _connection.CreateChannelAsync();
+        await _channel.QueueDeclareAsync("logs", durable: true, exclusive: false, autoDelete: false);
+    }
+
+
     public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
     {
-        var factory = new ConnectionFactory { HostName = _config["RabbitMQ:HostName"] };
-        using var connection = await factory.CreateConnectionAsync(cancellationToken);
-        using var channel = await connection.CreateChannelAsync();
-        await channel.QueueDeclareAsync("logs", durable: true, exclusive: false, autoDelete: false);
+        await EnsureConnectionAsync(cancellationToken);
+
+        if (_channel == null)
+        {
+            throw new InvalidOperationException("RabbitMQ channel is not initialized.");
+        }
+
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, JsonOptions.Default));
-        await channel.BasicPublishAsync("", "logs", body, cancellationToken);
+        await _channel.BasicPublishAsync("", "logs", body, cancellationToken);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_channel != null)
+        {
+            await _channel.DisposeAsync();
+        }
+
+        if (_connection != null)
+        {
+            await _connection.DisposeAsync();
+        }
     }
 }

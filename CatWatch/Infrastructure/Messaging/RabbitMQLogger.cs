@@ -5,18 +5,15 @@ namespace CatWatch.Infrastructure.Messaging;
 public class RabbitMqLogger : ILogger
 {
     private readonly IMessagePublisher _publisher;
+    private readonly LogLevel _minimumLevel;
 
-    private readonly IConfiguration _config;
-
-
-    public bool IsEnabled(LogLevel logLevel) => 
-        logLevel >= Enum.Parse<LogLevel>(_config["RabbitMQ:MinimumLogLevel"] ?? "Information");
+    public bool IsEnabled(LogLevel logLevel) => logLevel >= _minimumLevel;
 
 
     public RabbitMqLogger(IMessagePublisher publisher, IConfiguration config)
     {
             _publisher = publisher;
-            _config = config;
+            _minimumLevel = Enum.TryParse<LogLevel>(config["RabbitMQ:MinimumLogLevel"], out var level) ? level : LogLevel.Information;    
     }
 
 
@@ -27,6 +24,13 @@ public class RabbitMqLogger : ILogger
     {
         if (!IsEnabled(logLevel)) return;
        
-        _ = _publisher.PublishAsync(new LogMessage(logLevel, formatter(state, exception), DateTime.UtcNow, ServiceNames.CatWatch));
+        try
+        {
+            _ = _publisher.PublishAsync(new LogMessage(logLevel, formatter(state, exception), DateTime.UtcNow, ServiceNames.CatWatch));
+        }
+        catch (Exception ex)
+        {
+            // avoid unhandled exceptions
+        }
     }
 }

@@ -40,6 +40,7 @@ public class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, JsonOptions.Default));
         await _channel.BasicPublishAsync("", "logs", body, cancellationToken);
     }
+    
 
     public async ValueTask DisposeAsync()
     {

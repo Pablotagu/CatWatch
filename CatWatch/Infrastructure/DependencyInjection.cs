@@ -5,6 +5,7 @@ using MongoDB.Driver;
 
 namespace CatWatch.Infrastructure;
 
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -17,11 +18,19 @@ public static class DependencyInjection
         services.AddScoped<IReadingRepository, ReadingRepository>();
         services.AddScoped<IShelterRepository, ShelterRepository>();
 
-        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
-        services.AddSingleton<ILoggerProvider, RabbitMqLoggerProvider>();
-
-        
+        AddMessaging(services, configuration);
 
         return services;
+    }
+
+
+    private static void AddMessaging(IServiceCollection services, IConfiguration configuration)
+    {
+        var rabbitHost = configuration["RabbitMQ:HostName"];
+        if (string.IsNullOrWhiteSpace(rabbitHost))
+            return;
+
+        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+        services.AddSingleton<ILoggerProvider, RabbitMqLoggerProvider>();
     }
 }

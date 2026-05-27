@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatWatch.Features.Shelters.CreateShelter;
@@ -13,8 +12,7 @@ public class CreateShelterEndpoint : ControllerBase
     {
         _mediator = mediator;
     }
-    
-    [Authorize(Policy = "ApiKeyPolicy")]
+
     [HttpPost("api/shelters")]
     public async Task<IActionResult> Handle([FromBody] CreateShelterRequest request, CancellationToken cancellationToken)
     {

@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatWatch.Features.Shelters.GetShelters;
@@ -17,7 +16,6 @@ public class GetSheltersEndpoint : ControllerBase
     }
 
 
-    [Authorize(Policy = "ApiKeyPolicy")]
     [HttpGet("api/shelters")]
     public async Task<IActionResult> Handle(CancellationToken cancellationToken)
     {

@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -17,7 +16,6 @@ public class GetShelterEndpoint : ControllerBase
     }
 
 
-    [Authorize(Policy = "ApiKeyPolicy")]
     [HttpPost("api/shelters/{id}")]
     public async Task<IActionResult> Handle([FromRoute] Guid id, CancellationToken cancellationToken)
     {

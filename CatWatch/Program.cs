@@ -1,5 +1,5 @@
 using CatWatch.Infrastructure.Auth;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using CatWatch.Infrastructure;
 
 
@@ -10,12 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("ApiKeyPolicy", policy =>
-        policy.AddRequirements(new ApiKeyRequirement()));
-});
-builder.Services.AddSingleton<IAuthorizationHandler, ApiKeyHandler>();
+builder.Services.AddAuthentication("ApiKey")
+    .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKey", null);
+builder.Services.AddAuthorization();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 

@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatWatch.Features.Probes.CreateProbe;
@@ -15,7 +14,6 @@ public class CreateProbeEndpoint : ControllerBase
     }
 
 
-    [Authorize(Policy = "ApiKeyPolicy")]
     [HttpPost("api/probes")]
     public async Task<IActionResult> Handle([FromBody] CreateProbeRequest request, CancellationToken cancellationToken)
     {

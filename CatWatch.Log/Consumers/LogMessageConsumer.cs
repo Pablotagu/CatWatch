@@ -11,12 +11,15 @@ public class LogMessageConsumer : BackgroundService
 {
     private readonly ILogger<LogMessageConsumer> _logger;
     private readonly IConfiguration _config;
-
+    private readonly string _hostName;
 
     public LogMessageConsumer(ILogger<LogMessageConsumer> logger, IConfiguration config)
     {
         _logger = logger;
         _config = config;
+        _hostName = _config["RabbitMQ:HostName"] 
+            ?? throw new InvalidOperationException("RabbitMQ:HostName configuration is missing.");
+
     }
 
 
@@ -29,8 +32,7 @@ public class LogMessageConsumer : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var hostName = _config["RabbitMQ:HostName"] ?? throw new Exception("Missing RabbitMQ:HostName config");
-        var factory = new ConnectionFactory { HostName = hostName };
+        var factory = new ConnectionFactory { HostName = _hostName };
 
         using var connection = await factory.CreateConnectionAsync(stoppingToken);
         using var channel = await connection.CreateChannelAsync();

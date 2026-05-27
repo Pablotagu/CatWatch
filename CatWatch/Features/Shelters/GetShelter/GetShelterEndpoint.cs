@@ -16,7 +16,7 @@ public class GetShelterEndpoint : ControllerBase
     }
 
 
-    [HttpPost("api/shelters/{id}")]
+    [HttpGet("api/shelters/{id}")]
     public async Task<IActionResult> Handle([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var shelter = await _mediator.Send(new GetShelterQuery(id), cancellationToken);

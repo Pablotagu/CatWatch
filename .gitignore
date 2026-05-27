@@ -15,3 +15,4 @@ CatWatch.FW/include/README
 CatWatch.FW/test/README
 CatWatch.FW/src/secrets.h
 architecture.md
+.codegraph/.gitignore

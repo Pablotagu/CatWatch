@@ -11,9 +11,16 @@ public class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
     private readonly IConfiguration _config;
     private IConnection? _connection;
     private IChannel? _channel;
+    private string _hostName;
 
 
-    public RabbitMqPublisher(IConfiguration config) => _config = config;
+
+    public RabbitMqPublisher(IConfiguration config)
+    {
+        _config = config;  
+        _hostName = _config["RabbitMQ:HostName"] 
+            ?? throw new InvalidOperationException("RabbitMQ:HostName configuration is missing.");
+    } 
 
 
     private async Task EnsureConnectionAsync(CancellationToken cancellationToken)
@@ -21,7 +28,7 @@ public class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
         if (_channel != null) 
             return;
 
-        var factory = new ConnectionFactory { HostName = _config["RabbitMQ:HostName"] };
+        var factory = new ConnectionFactory { HostName = _hostName };
         _connection = await factory.CreateConnectionAsync(cancellationToken);
         _channel = await _connection.CreateChannelAsync();
         await _channel.QueueDeclareAsync("logs", durable: true, exclusive: false, autoDelete: false);

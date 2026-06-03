@@ -25,7 +25,7 @@ public class LogMessageConsumer : BackgroundService
 
     public Task ProcessMessageAsync(LogMessage message)
     {
-        _logger.LogInformation("{Level} - {Source}: {Message}", message.Level, message.Source, message.Message);
+        _logger.Log(message.Level,"{Source}: {LogMessage}", message.Source, message.Message);
         return Task.CompletedTask;
     }
 

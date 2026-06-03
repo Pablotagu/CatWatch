@@ -13,6 +13,7 @@ public class AddReadingEndpoint : ControllerBase
     {
         _mediator = mediator;
     }
+    
     [Authorize]
     [HttpPost("api/probes/{probeId:guid}/readings")]
     public async Task<IActionResult> Handle(Guid probeId, [FromBody] AddReadingRequest request, CancellationToken cancellationToken)

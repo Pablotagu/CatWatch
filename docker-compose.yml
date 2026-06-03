@@ -18,7 +18,7 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-      mongo:
+      loki:
         condition: service_started
 
   mongo:
@@ -38,6 +38,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  loki:
+    image: grafana/loki:3.0.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      loki:
+        condition: service_started
 
 volumes:
   mongo-data:

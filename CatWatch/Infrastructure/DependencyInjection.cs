@@ -1,6 +1,8 @@
 using CatWatch.Domain.Repositories;
+using CatWatch.Infrastructure.Auth;
 using CatWatch.Infrastructure.Messaging;
 using CatWatch.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
@@ -22,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IReadingRepository, ReadingRepository>();
         services.AddScoped<IShelterRepository, ShelterRepository>();
 
+        AddAuthentication(services);
         AddMessaging(services, configuration);
 
         return services;
@@ -36,5 +39,12 @@ public static class DependencyInjection
 
         services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
         services.AddSingleton<ILoggerProvider, RabbitMqLoggerProvider>();
+    }
+
+    private static void AddAuthentication(IServiceCollection services)
+    {
+        services.AddAuthentication("ApiKey")
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKey", null);
+        services.AddAuthorization();
     }
 }

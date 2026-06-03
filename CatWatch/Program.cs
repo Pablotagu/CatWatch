@@ -9,15 +9,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-
-builder.Services.AddAuthentication("ApiKey")
-    .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKey", null);
-builder.Services.AddAuthorization();
-
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddHealthChecks();
 
 
@@ -33,7 +26,6 @@ if (app.Environment.IsDevelopment())
 app.MapHealthChecks("/health");
 
 app.UseExceptionHandler();
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
